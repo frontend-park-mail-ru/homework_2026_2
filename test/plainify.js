@@ -62,4 +62,43 @@ QUnit.module('Тестируем функцию plainify', () => {
             'Результат должен быть правильным'
         );
     });
+
+    QUnit.test('Сохраняет null и undefined как значения', (assert) => {
+        const originalObject = {
+            a: null,
+            b: {
+                c: undefined
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.deepEqual(
+            result,
+            { a: null, 'b.c': undefined },
+            'null и undefined не разворачиваются, а сохраняются'
+        );
+    });
+
+    QUnit.test('Сохраняет функции и массивы как значения', (assert) => {
+        const fn = () => 1;
+        const originalObject = {
+            cb: fn,
+            list: [1, 2],
+            nested: {
+                items: [3]
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.strictEqual(result.cb, fn, 'функция сохраняется как значение');
+        assert.deepEqual(result.list, [1, 2], 'массив на верхнем уровне сохраняется');
+        assert.deepEqual(result['nested.items'], [3], 'вложенный массив сохраняется');
+    });
+
+    QUnit.test('Для некорректного входа возвращает пустой объект', (assert) => {
+        assert.deepEqual(plainify('строка'), {}, 'строка → {}');
+        assert.deepEqual(plainify(null), {}, 'null → {}');
+        assert.deepEqual(plainify([1, 2]), {}, 'массив → {}');
+        assert.deepEqual(plainify(42), {}, 'число → {}');
+    });
 });
