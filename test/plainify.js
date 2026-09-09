@@ -95,10 +95,10 @@ QUnit.module('Тестируем функцию plainify', () => {
         assert.deepEqual(result['nested.items'], [3], 'вложенный массив сохраняется');
     });
 
-    QUnit.test('Для некорректного входа возвращает пустой объект', (assert) => {
-        assert.deepEqual(plainify('строка'), {}, 'строка → {}');
-        assert.deepEqual(plainify(null), {}, 'null → {}');
-        assert.deepEqual(plainify([1, 2]), {}, 'массив → {}');
-        assert.deepEqual(plainify(42), {}, 'число → {}');
+    QUnit.test('Для некорректного входа возвращает null', (assert) => {
+        assert.strictEqual(plainify('строка'), null, 'строка -> null');
+        assert.strictEqual(plainify(null), null, 'null -> null');
+        assert.strictEqual(plainify([1, 2]), null, 'массив -> null');
+        assert.strictEqual(plainify(42), null, 'число -> null');
     });
 });
