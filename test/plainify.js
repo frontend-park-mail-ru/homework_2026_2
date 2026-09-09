@@ -80,6 +80,9 @@ QUnit.module('Тестируем функцию plainify', () => {
     });
 
     QUnit.test('Сохраняет функции и массивы как значения', (assert) => {
+        /**
+         * @returns {number}
+         */
         const fn = () => 1;
         const originalObject = {
             cb: fn,
