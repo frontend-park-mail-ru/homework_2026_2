@@ -98,10 +98,15 @@ QUnit.module('Тестируем функцию plainify', () => {
         assert.deepEqual(result['nested.items'], [3], 'вложенный массив сохраняется');
     });
 
-    QUnit.test('Для некорректного входа возвращает null', (assert) => {
-        assert.strictEqual(plainify('строка'), null, 'строка -> null');
-        assert.strictEqual(plainify(null), null, 'null -> null');
-        assert.strictEqual(plainify([1, 2]), null, 'массив -> null');
-        assert.strictEqual(plainify(42), null, 'число -> null');
+    QUnit.test('Для некорректного входа выбрасывает TypeError', (assert) => {
+        assert.throws(() => plainify('строка'), TypeError, 'строка -> TypeError');
+        assert.throws(() => plainify(null), TypeError, 'null -> TypeError');
+        assert.throws(() => plainify([1, 2]), TypeError, 'массив -> TypeError');
+        assert.throws(() => plainify(42), TypeError, 'число -> TypeError');
+        assert.throws(() => plainify(new Date()), TypeError, 'Date -> TypeError');
+        assert.throws(() => plainify(new Map()), TypeError, 'Map -> TypeError');
+        assert.throws(() => plainify(new Set()), TypeError, 'Set -> TypeError');
+        assert.throws(() => plainify(new String('hi')), TypeError, 'String -> TypeError');
+        assert.throws(() => plainify(new Number(1)), TypeError, 'Number -> TypeError');
     });
 });
