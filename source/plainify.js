@@ -7,14 +7,7 @@
  * @returns {boolean}
  */
 const isPlainObject = (value) =>
-    typeof value === 'object' &&
-    value !== null &&
-    !Array.isArray(value) &&
-    !(value instanceof Date) &&
-    !(value instanceof Map) &&
-    !(value instanceof Set) &&
-    !(value instanceof String) &&
-    !(value instanceof Number);
+    Object.prototype.toString.call(value) === '[object Object]';
 
 /**
  * Собирает плоский объект
