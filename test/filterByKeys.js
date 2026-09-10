@@ -59,6 +59,7 @@ QUnit.module('Тестируем функцию filterByKeys', () => {
         assert.throws(() => filterByKeys(true, keysToFilter), TypeError, 'boolean должен бросать TypeError');
         assert.throws(() => filterByKeys([1, 2, 3], keysToFilter), TypeError, 'массив должен бросать TypeError');
         assert.throws(() => filterByKeys(new Number(4), keysToFilter), TypeError, 'объект-обёртка должен бросать TypeError');
+        assert.throws(() => filterByKeys(new Set([1, 2, 3]), keysToFilter), TypeError, 'Set должен бросать TypeError');
     });
 
     QUnit.test('Бросает ошибку, если keys не является массивом', (assert) => {
