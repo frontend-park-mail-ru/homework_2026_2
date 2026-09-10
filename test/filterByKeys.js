@@ -41,6 +41,14 @@ QUnit.module('Тестируем функцию filterByKeys', () => {
         assert.deepEqual(result, {}, 'Если ни один ключ не найден, результат должен быть пустым объектом');
     });
 
+    QUnit.test('Работает правильно с числовыми ключами', (assert) => {
+        const originalObject = { 0: 2, c: 3 };
+        const keysToFilter = [0, 1];
+        const result = filterByKeys(originalObject, keysToFilter);
+
+        assert.deepEqual(result, { 0: 2 }, 'Числовой ключ должен совпадать со строковым ключом объекта');
+    });
+
     QUnit.test('Бросает ошибку, если obj не является объектом', (assert) => {
         const keysToFilter = ['a'];
 

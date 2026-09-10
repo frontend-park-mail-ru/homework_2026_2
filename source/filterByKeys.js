@@ -22,7 +22,9 @@ const filterByKeys = (obj, keys) => {
         throw new TypeError('keys должен быть массивом');
     }
 
-    const keysSet = new Set(keys);
+    // Ключи объекта в JS всегда строки, поэтому приводим элементы keys
+    // к строкам тоже - иначе числовой ключ 0 не совпадёт со строковым '0'
+    const keysSet = new Set(keys.map(String));
 
     return Object.fromEntries(Object.entries(obj).filter(([key]) => keysSet.has(key)));
 };
