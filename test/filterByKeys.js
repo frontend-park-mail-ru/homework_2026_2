@@ -40,4 +40,24 @@ QUnit.module('Тестируем функцию filterByKeys', () => {
 
         assert.deepEqual(result, {}, 'Если ни один ключ не найден, результат должен быть пустым объектом');
     });
+
+    QUnit.test('Бросает ошибку, если obj не является объектом', (assert) => {
+        const keysToFilter = ['a'];
+
+        assert.throws(() => filterByKeys(null, keysToFilter), TypeError, 'null должен бросать TypeError');
+        assert.throws(() => filterByKeys(undefined, keysToFilter), TypeError, 'undefined должен бросать TypeError');
+        assert.throws(() => filterByKeys(42, keysToFilter), TypeError, 'number должен бросать TypeError');
+        assert.throws(() => filterByKeys('строка', keysToFilter), TypeError, 'string должен бросать TypeError');
+        assert.throws(() => filterByKeys(true, keysToFilter), TypeError, 'boolean должен бросать TypeError');
+    });
+
+    QUnit.test('Бросает ошибку, если keys не является массивом', (assert) => {
+        const originalObject = { a: 1 };
+
+        assert.throws(() => filterByKeys(originalObject, null), TypeError, 'null должен бросать TypeError');
+        assert.throws(() => filterByKeys(originalObject, undefined), TypeError, 'undefined должен бросать TypeError');
+        assert.throws(() => filterByKeys(originalObject, 42), TypeError, 'number должен бросать TypeError');
+        assert.throws(() => filterByKeys(originalObject, 'строка'), TypeError, 'string должен бросать TypeError');
+        assert.throws(() => filterByKeys(originalObject, {}), TypeError, 'object должен бросать TypeError');
+    });
 });
