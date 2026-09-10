@@ -3,7 +3,7 @@
 /**
  * Функция, возвращающая новый объект, содержащий только указанные ключи исходного объекта
  * @param {Object} obj - исходный объект
- * @param {Array<String>} keys - массив ключей, которые нужно оставить в результирующем объекте
+ * @param {Array<String|Number>} keys - массив ключей, которые нужно оставить в результирующем объекте
  *
  * @example
  * // returns { a: 1, c: 3 }
@@ -14,7 +14,10 @@
  * @returns {Object}
  */
 const filterByKeys = (obj, keys) => {
-    if (typeof obj !== 'object' || obj === null) {
+    // typeof + null не отсеивает "объекты-обёртки" вроде new Number(4) -
+    // у них typeof === 'object', но Object.entries() для них вернёт пусто,
+    // поэтому дополнительно проверяем, что это именно обычный объект
+    if (typeof obj !== 'object' || obj === null || Object.prototype.toString.call(obj) !== '[object Object]') {
         throw new TypeError('obj должен быть объектом');
     }
 
