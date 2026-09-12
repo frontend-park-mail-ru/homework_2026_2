@@ -2,15 +2,16 @@
 
 /**
  * Функция-генератор чисел Фибоначчи
- * @param {Number} n - количество требуемых первых чисел Фибоначчи
+ * Если n <= 0, генератор не отдаёт ни одного значения.
+ * 
+ * @param {number} n - количество требуемых первых чисел Фибоначчи
  * 
  * @example
  * // returns [0, 1, 1, 2, 3]
- * [...fibonacciGenerator(5)]
+ * const numbers = [...fibonacciGenerator(5)];
  * 
- *
- * @returns {Generator<Number>}
- * при n <= 0 не отдает значения ([])
+ * @yields {number} очередное число последовательности Фибоначчи
+ * @returns {Generator<number>}
  */
 function* fibonacciGenerator(n) {
     if (n <= 0) return;
