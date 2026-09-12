@@ -27,5 +27,5 @@ const sortByFrequency = (arr) => {
         acc[curr] = (acc[curr] || 0) + 1;
         return acc;
     }, {});
-    return [...arr].sort((a, b) => frequency[b] - frequency[a] || a - b);
+    return [...arr].sort((a, b) => (frequency[b] - frequency[a]) || (a - b));
 };
