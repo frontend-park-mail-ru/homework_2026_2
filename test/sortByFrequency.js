@@ -34,7 +34,7 @@ QUnit.module("Тестируем функцию sortByFrequency", function() {
     QUnit.test("Работает правильно с массивом с отрицательными элементами", function(assert) {
         const result = sortByFrequency([-5, -5, -3, -2, -1, -1, -1, 5, 5, 5]);
 
-        assert.deepEqual(result, [-1, -1, -1, 5, 5, 5, -5, -5, -3, -2], "Сортирует массив по возрастанию, если все элементы уникальны.");
+        assert.deepEqual(result, [-1, -1, -1, 5, 5, 5, -5, -5, -3, -2], "Отрицательные элементы учитываются верно");
     });
 
     QUnit.test('Выбрасывает TypeError при передаче не массива', (assert) => {
@@ -46,12 +46,7 @@ QUnit.module("Тестируем функцию sortByFrequency", function() {
     });
 
     QUnit.test('Выбрасывает TypeError при передаче массива с нечисловыми элементами', (assert) => {
-        assert.throws(
-            () => {
-                sortByFrequency([1, 2, '3']);
-            },
-            TypeError,
-            'Должна выбросить TypeError, если массив содержит нечисловые элементы'
+        assert.throws(() => {sortByFrequency([1, 2, '3']);}, TypeError, 'Должна выбросить TypeError, если массив содержит нечисловые элементы'
         );
     });
 });
