@@ -43,5 +43,51 @@ QUnit.module("Тестируем функцию fetchAndMerge", function() {
         const result = await fetchAndMergeData(urls);
         assert.deepEqual(result, {}, "Должно возвращать пустой объект при ошибке fetch");
     });
+
+    QUnit.test("Работает с одним URL", async function(assert) {
+    const urls = [
+        'https://example.com/user',
+    ];
+    const expected = {
+        "id": [1],
+        "name": ["Олег"],
+    };
+
+    window.fetch = () => {
+        return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+                "id": 1,
+                "name": "Олег",
+            }),
+        });
+    };
+
+    const result = await fetchAndMergeData(urls);
+    assert.deepEqual(result, expected, "Должно правильно обрабатывать один URL");
+});
+
+QUnit.test("Не добавляет одинаковые значения повторно", async function(assert) {
+    const urls = [
+        'https://example.com/first',
+        'https://example.com/second',
+    ];
+    const expected = {
+        "city": ["Москва"],
+    };
+
+    window.fetch = () => {
+        return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+                "city": "Москва",
+            }),
+        });
+    };
+
+    const result = await fetchAndMergeData(urls);
+    assert.deepEqual(result, expected, "Одинаковые значения не должны повторяться");
+});
+
 });
 
