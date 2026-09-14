@@ -17,7 +17,7 @@
  * @returns {Generator<number>}
  */
 function* fibonacciGenerator(n) {
-    if (typeof n !== 'number') {
+    if (typeof n !== 'number' || Number.isNaN(n)) {
         throw new TypeError('n должно быть числом');
     }
 
