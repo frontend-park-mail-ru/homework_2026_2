@@ -42,4 +42,20 @@ QUnit.module("Тестируем функцию partition", function() {
             ]
         ]);
     });
+
+    QUnit.test("Возвращает два пустых массива для пустого входного массива", function(assert) {
+        const hollow_result = partition([], () => true);
+
+        assert.deepEqual(hollow_result, [[], []]);
+    });
+
+    QUnit.test("Возвращает пустой первый массив, если предикат всегда false", function(assert) {
+        const isNegative = number => number < 0;
+        const result = partition([1, 2, 3, 4], isNegative);
+
+        assert.deepEqual(result, [
+            [],
+            [1, 2, 3, 4]
+        ]);
+    });
 });
