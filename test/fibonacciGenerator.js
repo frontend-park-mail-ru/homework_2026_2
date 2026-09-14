@@ -18,7 +18,7 @@ QUnit.module("Тестируем функцию fibonacciGenerator", function() 
 
         assert.deepEqual([...fibGen], [0, 1, 1], "Должны быть сгенерированы первые 3 числа Фибоначчи.");
     });
-    
+
     QUnit.test("Правильно генерирует 5 первых чисел Фибоначчи", function(assert) {
         const fibGen = fibonacciGenerator(5);
 
@@ -37,7 +37,7 @@ QUnit.module("Тестируем функцию fibonacciGenerator", function() 
         assert.deepEqual([...fibGen], [], "Генерация отрицательного числа должна вернуть пустой массив.");
     });
 
-    QUnit.test("Правильно генерирует 79 (максимально для типа int) первых чисел Фибоначчи", function(assert) {
+    QUnit.test("Правильно генерирует 79 (максимально точно и безопасно для типа number) первых чисел Фибоначчи", function(assert) {
         const fibGen = fibonacciGenerator(79);
 
         assert.deepEqual([...fibGen], [
@@ -49,24 +49,46 @@ QUnit.module("Тестируем функцию fibonacciGenerator", function() 
             12586269025, 20365011074, 32951280099, 53316291173, 86267571272, 139583862445, 225851433717, 365435296162, 591286729879, 956722026041,
             1548008755920, 2504730781961, 4052739537881, 6557470319842, 10610209857723, 17167680177565, 27777890035288, 44945570212853, 72723460248141, 117669030460994,
             190392490709135, 308061521170129, 498454011879264, 806515533049393, 1304969544928657, 2111485077978050, 3416454622906707, 5527939700884757, 8944394323791464
-          ], "Должны быть сгенерированы первые 79 (максимально для типа int) чисел Фибоначчи.");
+          ], "Должны быть сгенерированы первые 79 (максимально точно и безопасно для типа number) чисел Фибоначчи.");
     });
 
-    QUnit.test("Работает правильно со строкой, содержащей число", function(assert) {
-        const fibGen = fibonacciGenerator('5');
-
-        assert.deepEqual([...fibGen], [0, 1, 1, 2, 3], "Строка '5' должна быть приведена к числу 5.");
+    QUnit.test("TypeError на строке, содержащей число", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator('5')],
+            TypeError,
+            "Строка не должна неявно приводиться к числу."
+        );
     });
 
-    QUnit.test("Работает правильно со строкой из букв", function(assert) {
-        const fibGen = fibonacciGenerator('abc');
-
-        assert.deepEqual([...fibGen], [], "Строка, не приводимая к числу, не должна давать значений.");
+    QUnit.test("TypeError на строке из букв", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator('abc')],
+            TypeError,
+            "Строка это недопустимый тип."
+        );
     });
 
-    QUnit.test("Работает правильно с дробным числом", function(assert) {
-        const fibGen = fibonacciGenerator(2.5);
+    QUnit.test("RangeError на дробном числе", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator(2.5)],
+            RangeError,
+            "Дробное число не является количеством чисел."
+        );
+    });
 
-        assert.deepEqual([...fibGen], [0, 1, 1], "Дробное число должно округляться вверх.");
+    QUnit.test("TypeError на массиве", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator([3])],
+            TypeError,
+            "Массив не должен неявно приводиться к числу."
+        );
+    });
+
+    QUnit.test("TypeError на булевом значении", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator(true)],
+            TypeError,
+            "Булево значение не должно неявно приводиться к числу."
+        );
     });
 });
