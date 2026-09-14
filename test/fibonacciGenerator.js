@@ -91,4 +91,12 @@ QUnit.module("Тестируем функцию fibonacciGenerator", function() 
             "Булево значение не должно неявно приводиться к числу."
         );
     });
+
+    QUnit.test("TypeError на NaN", function(assert) {
+        assert.throws(
+            () => [...fibonacciGenerator(NaN)],
+            TypeError,
+            "NaN не является целым числом."
+        );
+    });
 });
