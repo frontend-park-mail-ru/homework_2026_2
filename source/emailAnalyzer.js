@@ -28,19 +28,22 @@ const emailAnalyzer = (text) => {
 
         const normalEmails = emails.map(email => email.toLowerCase());
 
-        const emailFrequencies = new Map();
-        for (const email of normalEmails) {
-            if (!emailFrequencies.has(email)) {
-                emailFrequencies.set(email, 0);
-            }
-            emailFrequencies.set(email, emailFrequencies.get(email) + 1);
-        }
+        const emailFrequencies = normalEmails.reduce((acc, email) => {
+            acc.set(email, (acc.get(email) ?? 0) + 1);
+            return acc;
+        }, new Map());
 
         const uniqueEmails = [...emailFrequencies.keys()];
 
 
-        const maxCount = Math.max(0, ...[...emailFrequencies.values()]);
-        const mostFrequentEmail = uniqueEmails.find(email => emailFrequencies.get(email) === maxCount) || '';
+        const mostFrequentEmail = uniqueEmails.reduce((mostFrequent, email) => {
+            if (mostFrequent === null) {
+                return email;
+            }
+            const currentCount = emailFrequencies.get(email);
+            const maxCount = emailFrequencies.get(mostFrequent);
+            return currentCount > maxCount ? email : mostFrequent;
+        }, null) ?? '';
         const totalEmailCount = normalEmails.length;
 
         const result = {
