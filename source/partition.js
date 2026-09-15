@@ -1,22 +1,34 @@
 'use strict';
 
 /**
- * Разделяет массив на два подмассива по предикату
- * @param {Array} array - исходный массив
- * @param {Function} predicate - функция-предикат
- * @returns {Array<Array>} два подмассива: подходящие и неподходящие элементы
+ * Разделяет массив на два подмассива по предикату.
+ * @param {Array<any>} array - исходный массив.
+ * @param {function(any): boolean} predicate - функция-предикат.
+ * @returns {Array<Array<any>>} два подмассива: подходящие и неподходящие элементы.
+ * @throws {TypeError} если array не является массивом или predicate не является функцией.
+ * @example
+ * partition([1, 2, 3, 4], x => x % 2 === 0);
+ * // [[2, 4], [1, 3]]
  */
 const partition = (array, predicate) => {
-    const yes = [];
-    const no = [];
+    if (!Array.isArray(array)) {
+        throw new TypeError('array должен быть массивом');
+    }
+
+    if (typeof predicate !== 'function') {
+        throw new TypeError('predicate должен быть функцией');
+    }
+
+    const even = [];
+    const not_even = [];
 
     array.forEach(element => {
         if (predicate(element)) {
-            yes.push(element);
+            even.push(element);
         } else {
-            no.push(element);
+            not_even.push(element);
         }
     });
 
-    return [yes, no];
+    return [even, not_even];
 };
