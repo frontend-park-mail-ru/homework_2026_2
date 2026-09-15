@@ -19,16 +19,16 @@ const partition = (array, predicate) => {
         throw new TypeError('predicate должен быть функцией');
     }
 
-    const even = [];
-    const not_even = [];
+    const passed = [];
+    const failed = [];
 
     array.forEach(element => {
         if (predicate(element)) {
-            even.push(element);
+            passed.push(element);
         } else {
-            not_even.push(element);
+            failed.push(element);
         }
     });
 
-    return [even, not_even];
+    return [passed, failed];
 };

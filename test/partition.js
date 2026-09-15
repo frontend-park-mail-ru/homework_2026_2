@@ -42,6 +42,7 @@ QUnit.module("Тестируем функцию partition", function() {
             ]
         ]);
     });
+
     QUnit.test("Работает правильно при предикате, возвращающем false для всех элементов", function(assert) {
         const isNegative = num => num < 0;
         const result = partition([1, 2, 3], isNegative);
@@ -60,6 +61,7 @@ QUnit.module("Тестируем функцию partition", function() {
             []
         ]);
     });
+
     QUnit.test("Выбрасывает ошибку для невалидного массива", function(assert) {
         assert.throws(
             () => partition("not an array", x => x > 0),
@@ -73,6 +75,7 @@ QUnit.module("Тестируем функцию partition", function() {
             TypeError
         );
     });
+
     QUnit.test("Не изменяет исходный массив", function(assert) {
         const array = [1, 2, 3, 4];
         const original = [...array];
@@ -81,6 +84,7 @@ QUnit.module("Тестируем функцию partition", function() {
 
         assert.deepEqual(array, original);
     });
+
     QUnit.test("Выбрасывает ошибку для null и undefined вместо массива", function(assert) {
         assert.throws(
             () => partition(null, x => x > 0),
@@ -92,6 +96,7 @@ QUnit.module("Тестируем функцию partition", function() {
             TypeError
         );
     });
+
     QUnit.test("Выбрасывает ошибку для не-функции вместо предиката", function(assert) {
         assert.throws(
             () => partition([1, 2, 3], null),
