@@ -19,16 +19,11 @@ const partition = (array, predicate) => {
         throw new TypeError('predicate должен быть функцией');
     }
 
-    const passed = [];
-    const failed = [];
-
-    array.forEach(element => {
-        if (predicate(element)) {
-            passed.push(element);
-        } else {
-            failed.push(element);
-        }
-    });
-
-    return [passed, failed];
+    return array.reduce(
+        (result, element) => {
+            result[predicate(element) ? 0 : 1].push(element);
+            return result;
+        },
+        [[], []]
+    );
 };
