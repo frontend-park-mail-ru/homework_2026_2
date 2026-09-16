@@ -40,6 +40,13 @@ const mergeBy = (arr1, arr2, key) => {
         throw new TypeError('mergeBy: key должен быть непустой строкой');
     }
 
+    /**
+     * Проверяет, является ли значение «простым» объектом:
+     * не null, не массив, тип — object.
+     *
+     * @param {*} value - проверяемое значение
+     * @returns {boolean} true, если value — объект (не null и не массив)
+     */
     const isPlainObject = value =>
         value !== null && typeof value === 'object' && !Array.isArray(value);
 
