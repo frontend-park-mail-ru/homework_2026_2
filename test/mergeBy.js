@@ -174,28 +174,49 @@ QUnit.module('Тестируем функцию mergeBy', function () {
         );
     });
 
-    QUnit.test('Пропускает null, undefined и не-объекты в массивах', function (assert) {
-        const first = [
-            { id: 1, name: 'Аня' },
-            null,
-            undefined,
-            42,
-            'строка',
-            { id: 2, name: 'Боря' }
-        ];
-        const second = [
-            null,
-            { id: 1, age: 20 }
-        ];
-        const result = mergeBy(first, second, 'id');
+    QUnit.test('Бросает TypeError при null, undefined и примитивах в массиве', function (assert) {
+        assert.throws(
+            function () { mergeBy([{ id: 1 }, null], [], 'id'); },
+            TypeError,
+            'null в первом массиве → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([], [{ id: 2 }, 42], 'id'); },
+            TypeError,
+            'число во втором массиве → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([undefined], [], 'id'); },
+            TypeError,
+            'undefined в первом массиве → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([], ['строка'], 'id'); },
+            TypeError,
+            'строка во втором массиве → TypeError'
+        );
+    });
 
-        assert.deepEqual(
-            result,
-            [
-                { id: 1, name: 'Аня', age: 20 },
-                { id: 2, name: 'Боря' }
-            ],
-            'null, undefined и примитивы пропущены'
+    QUnit.test('Бросает TypeError при Date, Map, Set, RegExp в массиве', function (assert) {
+        assert.throws(
+            function () { mergeBy([new Date()], [], 'id'); },
+            TypeError,
+            'Date → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([], [new Map()], 'id'); },
+            TypeError,
+            'Map → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([new Set()], [], 'id'); },
+            TypeError,
+            'Set → TypeError'
+        );
+        assert.throws(
+            function () { mergeBy([], [/regex/], 'id'); },
+            TypeError,
+            'RegExp → TypeError'
         );
     });
 

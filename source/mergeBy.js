@@ -1,14 +1,23 @@
 'use strict';
 
 /**
+ * Проверяет, является ли значение обычным объектом (plain object).
+ *
+ * Отсекает null, массивы, Date, Map, Set, RegExp, примитивы и всё,
+ * что не является обычным объектом вида { ... }.
+ *
+ * @param {*} value - проверяемое значение
+ * @returns {boolean} true, если value — обычный объект
+ */
+const isPlainObject = value =>
+    Object.prototype.toString.call(value) === '[object Object]';
+
+/**
  * Объединяет два массива объектов по указанному ключу.
  *
  * Если в обоих массивах есть объекты с одинаковым значением ключа,
  * они сливаются в один объект. При совпадении свойств-массивов
  * они объединяются в один массив без дубликатов.
- *
- * Элементы массивов, не являющиеся объектами (null, undefined, числа,
- * строки), а также объекты без указанного ключа — пропускаются.
  *
  * @param {Array<Object>} arr1 - первый массив объектов
  * @param {Array<Object>} arr2 - второй массив объектов
@@ -16,6 +25,7 @@
  *
  * @throws {TypeError} если arr1 или arr2 не массивы
  * @throws {TypeError} если key не является непустой строкой
+ * @throws {TypeError} если элемент массива не является обычным объектом
  *
  * @example
  * const users = [{ id: 1, name: 'Alice' }];
@@ -40,18 +50,10 @@ const mergeBy = (arr1, arr2, key) => {
         throw new TypeError('mergeBy: key должен быть непустой строкой');
     }
 
-    /**
-     * Проверяет, является ли значение «простым» объектом:
-     * не null, не массив, тип — object.
-     *
-     * @param {*} value - проверяемое значение
-     * @returns {boolean} true, если value — объект (не null и не массив)
-     */
-    const isPlainObject = value =>
-        value !== null && typeof value === 'object' && !Array.isArray(value);
-
     const resultMap = arr1.reduce((acc, obj) => {
-        if (!isPlainObject(obj)) return acc;
+        if (!isPlainObject(obj)) {
+            throw new TypeError('mergeBy: arr1 содержит не-объект');
+        }
 
         const keyValue = obj[key];
         if (keyValue === undefined) return acc;
@@ -61,7 +63,9 @@ const mergeBy = (arr1, arr2, key) => {
     }, {});
 
     arr2.reduce((acc, obj) => {
-        if (!isPlainObject(obj)) return acc;
+        if (!isPlainObject(obj)) {
+            throw new TypeError('mergeBy: arr2 содержит не-объект');
+        }
 
         const keyValue = obj[key];
         if (keyValue === undefined) return acc;
