@@ -7,6 +7,9 @@
  * они сливаются в один объект. При совпадении свойств-массивов
  * они объединяются в один массив без дубликатов.
  *
+ * Элементы массивов, не являющиеся объектами (null, undefined, числа,
+ * строки), а также объекты без указанного ключа — пропускаются.
+ *
  * @param {Array<Object>} arr1 - первый массив объектов
  * @param {Array<Object>} arr2 - второй массив объектов
  * @param {string} key - имя ключа, по которому идёт объединение
@@ -33,43 +36,48 @@ const mergeBy = (arr1, arr2, key) => {
         throw new TypeError('mergeBy: arr1 и arr2 должны быть массивами');
     }
 
-    if (typeof key !== 'string' || key.length === 0) {
+    if (typeof key !== 'string' || key.trim().length === 0) {
         throw new TypeError('mergeBy: key должен быть непустой строкой');
     }
 
-    const resultMap = {};
+    const isPlainObject = value =>
+        value !== null && typeof value === 'object' && !Array.isArray(value);
 
-    arr1.forEach(obj => {
+    const resultMap = arr1.reduce((acc, obj) => {
+        if (!isPlainObject(obj)) return acc;
+
         const keyValue = obj[key];
+        if (keyValue === undefined) return acc;
 
-        // Пропускаем объекты без ключа
-        if (keyValue === undefined) return;
+        acc[keyValue] = { ...obj };
+        return acc;
+    }, {});
 
-        resultMap[keyValue] = { ...obj };
-    });
+    arr2.reduce((acc, obj) => {
+        if (!isPlainObject(obj)) return acc;
 
-    arr2.forEach(obj => {
         const keyValue = obj[key];
+        if (keyValue === undefined) return acc;
 
-        // Пропускаем объекты без ключа
-        if (keyValue === undefined) return;
-
-        if (resultMap[keyValue]) {
-            const existing = resultMap[keyValue];
-
-            Object.entries(obj).forEach(([prop, value]) => {
-                if (prop === key) return;
-
-                if (Array.isArray(existing[prop]) && Array.isArray(value)) {
-                    existing[prop] = [...new Set([...existing[prop], ...value])];
-                } else {
-                    existing[prop] = value;
-                }
-            });
-        } else {
-            resultMap[keyValue] = { ...obj };
+        if (!acc[keyValue]) {
+            acc[keyValue] = { ...obj };
+            return acc;
         }
-    });
+
+        const existing = acc[keyValue];
+
+        Object.entries(obj).forEach(([prop, value]) => {
+            if (prop === key) return;
+
+            if (Array.isArray(existing[prop]) && Array.isArray(value)) {
+                existing[prop] = [...new Set([...existing[prop], ...value])];
+            } else {
+                existing[prop] = value;
+            }
+        });
+
+        return acc;
+    }, resultMap);
 
     return Object.values(resultMap);
 };
