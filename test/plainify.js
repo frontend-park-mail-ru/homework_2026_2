@@ -59,12 +59,16 @@ QUnit.module('Тестируем функцию plainify', () => {
 
 			const result = plainify(originalObject);
 
-			assert.deepEqual(result, {
-				x: 'a',
-				y: {},
-				z: {},
-				q: 227,
-			});
+			assert.deepEqual(
+				result,
+				{
+					x: 'a',
+					y: {},
+					z: {},
+					q: 227,
+				},
+				'Объект, содержащий пустые объекты должен быть правильно обработан',
+			);
 		},
 	);
 
@@ -78,11 +82,54 @@ QUnit.module('Тестируем функцию plainify', () => {
 
 		const result = plainify(originalObject);
 
-		assert.deepEqual(result, {
-			a: 1,
-			b: 4,
-			c: 8,
-			d: 'no',
-		});
+		assert.deepEqual(
+			result,
+			{
+				a: 1,
+				b: 4,
+				c: 8,
+				d: 'no',
+			},
+			'',
+		);
+	});
+
+	QUnit.test('Бросает TypeError: null', assert => {
+		assert.throws(() => plainify(null), TypeError, 'null -> TypeError');
+	});
+
+	QUnit.test('Бросает TypeError: число', assert => {
+		assert.throws(() => plainify(42), TypeError, 'число -> TypeError');
+	});
+
+	QUnit.test('Бросает TypeError: строку', assert => {
+		assert.throws(() => plainify('abc'), TypeError, 'строка -> TypeError');
+	});
+
+	QUnit.test('Бросает TypeError: массив', assert => {
+		assert.throws(() => plainify([2, 2, 8]), TypeError, 'массив -> TypeError');
+	});
+
+	QUnit.test('Бросает TypeError: undefined', assert => {
+		assert.throws(
+			() => plainify(undefined),
+			TypeError,
+			'undefined -> TypeError',
+		);
+	});
+
+	QUnit.test('Работает с объектом без прототипа', assert => {
+		const a = Object.create(null);
+		a.x = 1;
+
+		const result = plainify(a);
+
+		assert.deepEqual(
+			result,
+			{
+				x: 1,
+			},
+			'Функция не должна падать при работе с объектом без прототипа',
+		);
 	});
 });

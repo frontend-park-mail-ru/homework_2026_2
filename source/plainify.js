@@ -3,10 +3,7 @@
 function utilPlanify(obj, prefix = '') {
 	const result = {};
 
-	for (const key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
-
-		const value = obj[key];
+	for (const [key, value] of Object.entries(obj)) {
 		const path = prefix ? `${prefix}.${key}` : key;
 
 		if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
@@ -49,5 +46,9 @@ function utilPlanify(obj, prefix = '') {
  * @returns {Object}
  */
 function plainify(obj) {
+	if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+		throw new TypeError('Error! Wrong value');
+	}
+
 	return utilPlanify(obj);
 }
