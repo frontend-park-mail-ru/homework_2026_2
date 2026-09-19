@@ -12,16 +12,21 @@ function isPlainObject(potentialObj) {
 }
 
 /**
- * Возвращает поверхностную копию значения, чтобы результат plainify не ссылался на исходный объект.
+ * Возвращает глубокую копию значения, чтобы результат plainify не ссылался на исходный объект.
  *
  * @param {*} value — любое значение
  * @returns {*} копия значения (для объектов) или само значение (для примитивов)
  */
 function clone(value) {
 	if (value === null || typeof value !== 'object') return value;
-	if (typeof structuredClone === 'function') return structuredClone(value);
 
-	return value;
+	if (typeof structuredClone !== 'function') {
+		throw new Error(
+			'clone: structuredClone is not supported in this environment',
+		);
+	}
+
+	return structuredClone(value);
 }
 
 /**
@@ -32,27 +37,25 @@ function clone(value) {
  * @returns {Object} плоский объект для поддерева `obj`
  *
  * @example
- * utilPlanify({ c: 2, d: { e: 3 } }, 'b')
+ * utilPlainify({ c: 2, d: { e: 3 } }, 'b')
  * // returns { 'b.c': 2, 'b.d.e': 3 }
  */
-function utilPlanify(obj, prefix = '') {
-	const result = {};
-
-	for (const [key, value] of Object.entries(obj)) {
+function utilPlainify(obj, prefix = '') {
+	return Object.entries(obj).reduce((result, [key, value]) => {
 		const path = prefix ? `${prefix}.${key}` : key;
 
 		if (isPlainObject(value)) {
 			if (Object.keys(value).length === 0) {
 				result[path] = {};
 			} else {
-				Object.assign(result, utilPlanify(value, path));
+				Object.assign(result, utilPlainify(value, path));
 			}
 		} else {
 			result[path] = clone(value);
 		}
-	}
 
-	return result;
+		return result;
+	}, {});
 }
 
 /**
@@ -93,5 +96,5 @@ function plainify(obj) {
 		throw new TypeError('Error! Wrong value');
 	}
 
-	return utilPlanify(obj);
+	return utilPlainify(obj);
 }

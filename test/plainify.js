@@ -119,4 +119,33 @@ QUnit.module('Тестируем функцию plainify', () => {
 			'дата не должна превращаться в {}',
 		);
 	});
+
+	QUnit.test(
+		'Массив внутри объекта остаётся массивом, а не раскладывается по индексам',
+		assert => {
+			const originalObject = {
+				z: [1, 2],
+			};
+
+			const result = plainify(originalObject);
+
+			assert.deepEqual(
+				result,
+				{ z: [1, 2] },
+				'Массив должен остаться значением, а не превратиться в z.0 и z.1',
+			);
+		},
+	);
+
+	QUnit.test('Мутация результата не меняет исходный объект', assert => {
+		const src = { arr: [1, 2] };
+
+		plainify(src).arr.push(999);
+
+		assert.deepEqual(
+			src.arr,
+			[1, 2],
+			'push по массиву в результате не должен затрагивать исходный массив',
+		);
+	});
 });
