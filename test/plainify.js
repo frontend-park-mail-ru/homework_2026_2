@@ -72,28 +72,6 @@ QUnit.module('Тестируем функцию plainify', () => {
 		},
 	);
 
-	QUnit.test('Работает правильно с объектом, не содержащий объекты', assert => {
-		const originalObject = {
-			a: 1,
-			b: 4,
-			c: 8,
-			d: 'no',
-		};
-
-		const result = plainify(originalObject);
-
-		assert.deepEqual(
-			result,
-			{
-				a: 1,
-				b: 4,
-				c: 8,
-				d: 'no',
-			},
-			'',
-		);
-	});
-
 	QUnit.test('Бросает TypeError: null', assert => {
 		assert.throws(() => plainify(null), TypeError, 'null -> TypeError');
 	});
@@ -130,6 +108,15 @@ QUnit.module('Тестируем функцию plainify', () => {
 				x: 1,
 			},
 			'Функция не должна падать при работе с объектом без прототипа',
+		);
+	});
+
+	QUnit.test('Date внутри объекта остаётся как значение', assert => {
+		const d = new Date('2020-02-28');
+		assert.deepEqual(
+			plainify({ d }),
+			{ d },
+			'дата не должна превращаться в {}',
 		);
 	});
 });

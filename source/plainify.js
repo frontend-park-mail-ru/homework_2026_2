@@ -4,6 +4,13 @@ function isPlainObject(potentialObj) {
 	return Object.prototype.toString.call(potentialObj) === '[object Object]';
 }
 
+function clone(value) {
+	if (value === null || typeof value !== 'object') return value;
+	if (typeof structuredClone === 'function') return structuredClone(value);
+
+	return value;
+}
+
 function utilPlanify(obj, prefix = '') {
 	const result = {};
 
@@ -17,7 +24,7 @@ function utilPlanify(obj, prefix = '') {
 				Object.assign(result, utilPlanify(value, path));
 			}
 		} else {
-			result[path] = value;
+			result[path] = clone(value);
 		}
 	}
 
