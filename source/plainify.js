@@ -1,12 +1,16 @@
 'use strict';
 
+function isPlainObject(potentialObj) {
+	return Object.prototype.toString.call(potentialObj) === '[object Object]';
+}
+
 function utilPlanify(obj, prefix = '') {
 	const result = {};
 
 	for (const [key, value] of Object.entries(obj)) {
 		const path = prefix ? `${prefix}.${key}` : key;
 
-		if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+		if (isPlainObject(value)) {
 			if (Object.keys(value).length === 0) {
 				result[path] = {};
 			} else {
@@ -46,7 +50,7 @@ function utilPlanify(obj, prefix = '') {
  * @returns {Object}
  */
 function plainify(obj) {
-	if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+	if (!isPlainObject(obj)) {
 		throw new TypeError('Error! Wrong value');
 	}
 
