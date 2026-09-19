@@ -1,8 +1,11 @@
 /**
- * Функция разделяет массив на два подмассива с помщью предиката
+ * Функция разделяет массив на два подмассива с помощью предиката
  *
- * @param {Array} alpha_arr - массив произвольных элементов
- * @param {Function} pred - предикат 
+ * @param {Array} items - массив произвольных элементов
+ * @param {Function} pred - предикат
+ * 
+ * @throws {TypeError} - Если первый аргумент не массив
+ * @throws {TypeError} - Если второй аргумент не функция 
  * 
  * @example
  * // returns [[1,22,25], [10,20]]
@@ -11,11 +14,21 @@
  * @returns {Array<Array>} массив из двух массивов, первый массив - подошедшие элементы, второй - остальные
  * 
  */
-const partition = function (alpha_arr, pred) {
-  let correct = [];
-  let incorrect = [];
-  for (let i = 0; i < alpha_arr.length; i++) {
-    (pred(alpha_arr[i]) ? correct.push(alpha_arr[i]) : incorrect.push(alpha_arr[i]));
+
+'use strict';
+
+const partition = function (items, pred) {
+  if (!Array.isArray(items)) {
+    throw new TypeError('partition: первый аргумент должен быть массивом');
   }
-  return [correct, incorrect];
+  if (typeof pred !== 'function') {
+    throw new TypeError('partition: второй аргумент должен быть функцией');
+  }
+  return items.reduce(
+    (result, item) => {
+      result[pred(item) ? 0 : 1].push(item);
+      return result;
+    },
+    [[], []]
+  );
 };

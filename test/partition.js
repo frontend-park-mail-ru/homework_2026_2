@@ -44,9 +44,9 @@ QUnit.module("Тестируем функцию partition", function() {
     });
 
     QUnit.test("Возвращает два пустых массива для пустого входного массива", function(assert) {
-        const hollow_result = partition([], () => true);
+        const result = partition([], () => true);
 
-        assert.deepEqual(hollow_result, [[], []]);
+        assert.deepEqual(result, [[], []]);
     });
 
     QUnit.test("Возвращает пустой первый массив, если предикат всегда false", function(assert) {
@@ -58,4 +58,22 @@ QUnit.module("Тестируем функцию partition", function() {
             [1, 2, 3, 4]
         ]);
     });
+
+    QUnit.test("Бросает TypeError, если вместо массива передан null", function(assert) {
+        assert.throws(
+            () => partition(null, () => true),
+            err => err instanceof TypeError && /первый аргумент должен быть массивом/.test(err.message)
+        );
+    });
+
+    QUnit.test("Бросает TypeError, если предикат — null", function(assert) {
+        assert.throws(
+            () => partition([1, 2, 3], null),
+            err => err instanceof TypeError && /второй аргумент должен быть функцией/.test(err.message)
+        );
+    });
 });
+
+
+
+
