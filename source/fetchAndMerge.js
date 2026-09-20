@@ -7,32 +7,50 @@
  * @returns {Promise<Object>} объект с объединёнными данными
  */
 const fetchAndMergeData = async (urls) => {
-    const result = {};
-
-    try {
-        // Загружаем данные по каждому URL
-        for (const url of urls) {
-            const response = await fetch(url);
-
-            // При ошибочном ответе возвращаем пустой объект
-            if (!response.ok) {
-                return {};
+        //Проверка строк на url
+        if (!Array.isArray(urls) || !urls.every((url) => {
+            if (typeof url !== 'string') {
+                return false;
             }
 
-            const data = await response.json();
+            try {
+                new URL(url);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        })) {
+            return {};
+        }
+        const result = {};
 
-            // Объединяем значения по одинаковым ключам
-            for (const key in data) {
-                if (!result[key]) {
+    try {
+        // Загружаем данные со всех URL параллельно
+        const data = await Promise.all(
+            urls.map(async (url) => {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+
+                return response.json();
+            })
+        );
+
+         // Объединяем значения по одинаковым ключам
+        data.forEach((item) => {
+            Object.entries(item).forEach(([key, value]) => {
+                if (result[key] === undefined) {
                     result[key] = [];
                 }
 
                 // Добавляем только уникальные значения
-                if (!result[key].includes(data[key])) {
-                    result[key].push(data[key]);
+                if (!result[key].includes(value)) {
+                    result[key].push(value);
                 }
-            }
-        }
+            });
+        });
 
         return result;
     } catch (error) {
