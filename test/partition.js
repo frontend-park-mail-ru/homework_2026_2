@@ -72,8 +72,32 @@ QUnit.module("Тестируем функцию partition", function() {
             err => err instanceof TypeError && /второй аргумент должен быть функцией/.test(err.message)
         );
     });
+
+    QUnit.test("Бросает TypeError, если вместо массива передан undefined", function(assert) {
+        assert.throws(() => partition(undefined, () => true), /первый аргумент должен быть массивом/);
+    });
+
+    QUnit.test("Бросает TypeError, если вместо массива передана строка", function(assert) {
+        assert.throws(() => partition("abc", () => true), /первый аргумент должен быть массивом/);
+    });
+
+    QUnit.test("Бросает TypeError, если вместо массива передано число", function(assert) {
+        assert.throws(() => partition(13570, () => true), /первый аргумент должен быть массивом/);
+    });
+
+    QUnit.test("Бросает TypeError, если вместо массива передан объект", function(assert) {
+        assert.throws(() => partition({}, () => true), /первый аргумент должен быть массивом/);
+    });
+
+    QUnit.test("Бросает TypeError, если предикат — строка", function(assert) {
+        assert.throws(() => partition([1, 2, 3], "не функция"), /второй аргумент должен быть функцией/);
+    });
+
+    QUnit.test("Бросает TypeError, если предикат — число", function(assert) {
+        assert.throws(() => partition([4, 2, 0], 34), /второй аргумент должен быть функцией/);
+    });
+
+    QUnit.test("Бросает TypeError, если предикат — объект", function(assert) {
+        assert.throws(() => partition([1, 3, 5, 7, 0], {}), /второй аргумент должен быть функцией/);
+    });
 });
-
-
-
-

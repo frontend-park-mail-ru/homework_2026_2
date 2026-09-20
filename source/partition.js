@@ -1,23 +1,22 @@
+'use strict';
+
 /**
  * Функция разделяет массив на два подмассива с помощью предиката
  *
  * @param {Array} items - массив произвольных элементов
  * @param {Function} pred - предикат
- * 
+ *
  * @throws {TypeError} - Если первый аргумент не массив
- * @throws {TypeError} - Если второй аргумент не функция 
- * 
+ * @throws {TypeError} - Если второй аргумент не функция
+ *
  * @example
  * // returns [[1,22,25], [10,20]]
  * partition([1, 22, 10, 20, 25], n => n % 10 > 0);
- * 
+ *
  * @returns {Array<Array>} массив из двух массивов, первый массив - подошедшие элементы, второй - остальные
- * 
+ *
  */
-
-'use strict';
-
-const partition = function (items, pred) {
+const partition = (items, pred) => {
   if (!Array.isArray(items)) {
     throw new TypeError('partition: первый аргумент должен быть массивом');
   }
